@@ -3,39 +3,37 @@ package com.DAO;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
+import com.Bean.AllSubjects;
+import com.Bean.AllTeachers;
 
-import com.Bean.AllStudents;
-
-
-public class StudentsDAO {
-	
-	private Log log = LogFactory.getLog(StudentsDAO.class);
+public class TeachersDAO {
+	private Log log = LogFactory.getLog(TeachersDAO.class);
 
 	public Session userDetailsSessionFactory() {
         SessionFactory sessionFactory = new Configuration()
             .configure("hibernate.cfg.xml")
-            .addAnnotatedClass(AllStudents.class)
+            .addAnnotatedClass(AllTeachers.class)
             .buildSessionFactory();
         Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
         return session;
     }
 	
-	public synchronized List<AllStudents> listStudents() {
-        log.info("Entering Method listStudents ");
+	public synchronized List<AllTeachers> listTeachers() {
+        log.info("Entering Method listTeachers ");
         Session session = this.userDetailsSessionFactory();
-        List<AllStudents> studentsList = new ArrayList<AllStudents>();
+        List<AllTeachers> teachersList = new ArrayList<AllTeachers>();
         try {
-			 studentsList =  session.createQuery(" from AllStudents").getResultList();
-			 log.info(studentsList.toString());
+        	teachersList =  session.createQuery(" from AllTeachers").getResultList();
+			 log.info(teachersList.toString());
         } catch (Exception re) {
-            log.error(" Error while executing the method listStudents " + re.getMessage() + re.getClass());
+            log.error(" Error while executing the method listTeachers " + re.getMessage() + re.getClass());
             throw re;
         } finally {
             if (session != null) {
@@ -45,25 +43,25 @@ public class StudentsDAO {
                     log.error("Session Closed!" + e);
                 }
             }
-            log.info("Exiting the method listStudents");
+            log.info("Exiting the method listTeachers");
 
         }
-		return studentsList;
+		return teachersList;
 	}
 
 	
-	public synchronized void addStudents(AllStudents students) {
-        log.info("Entering Method addStudents ");
+	public synchronized void addTeachers(AllTeachers teachers) {
+        log.info("Entering Method addTeachers ");
         Session session = this.userDetailsSessionFactory();
         try {
-        	if(students.getStudentId() <= 0) {
-    			session.save(students);
+        	if(teachers.getTeaherId() <= 0) {
+    			session.save(teachers);
         	}
 			session.getTransaction().commit();
 			
         } catch (Exception re) {
 			session.getTransaction().rollback();
-            log.error(" Error while executing the method addSubjects " + re.getMessage() + re.getClass());
+            log.error(" Error while executing the method addTeachers " + re.getMessage() + re.getClass());
             throw re;
         } finally {
             if (session != null) {
@@ -73,11 +71,8 @@ public class StudentsDAO {
                     log.error("Session Closed!" + e);
                 }
             }
-            log.info("Exiting the method addSubjects");
+            log.info("Exiting the method addTeachers");
 
         }
     }
-
-	
-	
 }
